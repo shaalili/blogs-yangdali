@@ -10,6 +10,7 @@
 	<artifactId>blogs-web</artifactId>
 	<packaging>war</packaging>
 	<dependencies>
+		<!-- 本地项目 -->
 		<dependency>
 			<groupId>cn.yangdali</groupId>
 			<artifactId>blogs-common</artifactId>
