@@ -1,0 +1,12 @@
+cn\yangdali\mapper\CommentMapper.class
+cn\yangdali\mapper\ArticleTagRefMapper.class
+cn\yangdali\mapper\UserMapper.class
+cn\yangdali\mapper\OptionsMapper.class
+cn\yangdali\mapper\ArticleCategoryRefMapper.class
+cn\yangdali\mapper\ArticleMapper.class
+cn\yangdali\mapper\TagMapper.class
+cn\yangdali\mapper\PageMapper.class
+cn\yangdali\mapper\MenuMapper.class
+cn\yangdali\mapper\LinkMapper.class
+cn\yangdali\mapper\CategoryMapper.class
+cn\yangdali\mapper\NoticeMapper.class

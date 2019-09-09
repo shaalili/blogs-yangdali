@@ -16,12 +16,6 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-	<modules>
-		<module>blogs-manager-dao</module>
-		<module>blogs-manager-pojo</module>
-		<module>blogs-manager-interface</module>
-		<module>blogs-manager-service</module>
-	</modules>
 	<build>
 		<plugins>
 			<plugin>
@@ -34,4 +28,10 @@
 			</plugin>
 		</plugins>
 	</build>
+	<modules>
+		<module>blogs-manager-dao</module>
+		<module>blogs-manager-interface</module>
+		<module>blogs-manager-pojo</module>
+		<module>blogs-manager-service</module>
+	</modules>
 </project>
