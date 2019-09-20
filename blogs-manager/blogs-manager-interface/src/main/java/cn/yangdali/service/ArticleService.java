@@ -164,6 +164,7 @@ public interface ArticleService {
 
     /**
      * 添加文章
+     * 		在1.1版本中，利用RocketMQ，在新增文章同时添加id至布隆过滤器中
      *
      * @param article 文章
      */

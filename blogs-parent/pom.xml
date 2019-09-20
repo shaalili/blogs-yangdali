@@ -30,7 +30,6 @@
 		<dubbo.version>2.6.6</dubbo.version>
 		<zookeeper.version>3.4.14</zookeeper.version>
 		<zkclient.version>0.10</zkclient.version>
-		<activemq.version>5.15.9</activemq.version>
 		<freemarker.version>2.3.23</freemarker.version>
 		<quartz.version>2.2.2</quartz.version>
 	</properties>
@@ -68,7 +67,7 @@
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>fastjson</artifactId>
-				<version>1.2.58</version>
+				<version>1.2.58.sec06</version>
 			</dependency>
 			<!-- httpclient -->
 			<dependency>
@@ -217,11 +216,6 @@
 				<version>${zkclient.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.activemq</groupId>
-				<artifactId>activemq-all</artifactId>
-				<version>${activemq.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.freemarker</groupId>
 				<artifactId>freemarker</artifactId>
 				<version>${freemarker.version}</version>
@@ -268,6 +262,12 @@
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-annotations</artifactId>
 				<version>2.10.0.pr1</version>
+			</dependency>
+			<!-- RocketMQ消息队列jar包 -->
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>4.5.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

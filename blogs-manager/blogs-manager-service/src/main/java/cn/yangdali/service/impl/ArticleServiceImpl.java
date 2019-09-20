@@ -1,6 +1,20 @@
 package cn.yangdali.service.impl;
 
-import com.github.pagehelper.Page;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -15,17 +29,19 @@ import cn.yangdali.pojo.Category;
 import cn.yangdali.pojo.Tag;
 import cn.yangdali.service.ArticleService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
+/**
+ * 文章操作service层 本次更新，加入了RocketMQ 在新增文章的同时，将文章ID添加到布隆过滤器中 删除文章时，将布隆过滤器重新初始化
+ * 
+ * 历史版本 1.0 实现基本的文章的增删改查操作
+ *
+ * @author：yangli
+ * @date:2019年9月17日 上午11:01:49
+ * @version 1.1
+ */
 @Service
 public class ArticleServiceImpl implements ArticleService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ArticleServiceImpl.class);
 
 	@Autowired(required = false)
 	private ArticleMapper articleMapper;
@@ -35,6 +51,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired(required = false)
 	private ArticleTagRefMapper articleTagRefMapper;
+
+	@Autowired
+	private DefaultMQProducer rocketmqProducer;
 
 	@Override
 	public Integer countArticle() {
@@ -146,16 +165,13 @@ public class ArticleServiceImpl implements ArticleService {
 		List<Article> articleList = articleMapper.findAll(criteria);
 		for (int i = 0; i < articleList.size(); i++) {
 			// 封装CategoryList
-			List<Category> categoryList = articleCategoryRefMapper.listCategoryByArticleId(articleList.get(i).getArticleId());
+			List<Category> categoryList = articleCategoryRefMapper
+					.listCategoryByArticleId(articleList.get(i).getArticleId());
 			if (categoryList == null || categoryList.size() == 0) {
 				categoryList = new ArrayList<>();
 				categoryList.add(Category.Default());
 			}
 			articleList.get(i).setCategoryList(categoryList);
-			// //封装TagList
-			// List<Tag> tagList =
-			// articleTagRefMapper.listTagByArticleId(articleList.get(i).getArticleId());
-			// articleList.get(i).setTagList(tagList);
 		}
 		return new PageInfo<>(articleList);
 	}
@@ -209,6 +225,16 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setArticleCommentCount(0);
 		article.setArticleOrder(1);
 		articleMapper.insert(article);
+		// 获取新增文章id,并且将其置入消息队列中，用于存放如布隆过滤器
+		Integer articleID = article.getArticleId();
+		String articleIDToString = String.valueOf(articleID);
+		try {
+			Message message = new Message("Article_Topic", "Article_Bloom", articleIDToString.getBytes(RemotingHelper.DEFAULT_CHARSET));
+			rocketmqProducer.send(message);
+		} catch (Exception e) {
+			logger.error("新增文章id至rocketmq消息队列中抛出异常,文章id:{},异常信息:{}", articleIDToString, e.getMessage());
+		}
+
 		// 添加分类和文章关联
 		for (int i = 0; i < article.getCategoryList().size(); i++) {
 			ArticleCategoryRef articleCategoryRef = new ArticleCategoryRef(article.getArticleId(),
