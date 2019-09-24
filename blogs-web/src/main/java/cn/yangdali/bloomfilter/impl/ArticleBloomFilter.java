@@ -1,6 +1,7 @@
 package cn.yangdali.bloomfilter.impl;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -20,10 +21,14 @@ import cn.yangdali.service.ArticleService;
 
 /**
  * 文章布隆过滤器操作类
+ * 		在新增文章时，同时利用rocketmq将文章id刷入布隆过滤器中
+ * 
+ * 历史版本
+ * 		v1.0.0:初始化布隆过滤器时，将数据库中文章id刷入
  *
  * @author：yangli	
  * @date:2019年9月20日 下午3:47:39
- * @version 1.0
+ * @version 1.1
  */
 @Repository
 public class ArticleBloomFilter implements BloomFilterInterface<Integer>{
@@ -40,11 +45,10 @@ public class ArticleBloomFilter implements BloomFilterInterface<Integer>{
     
     /**
      * 此处初始化布隆过滤器时，将数据库中文章id刷入
+     * 
      * 待解决问题：
      * 1.此处如果文章增多，那么如何动态增加布隆过滤器长度？
      * 2.如果文章进行删除，那么如何删除布隆过滤器中的相关数值？
-     * 
-     * 下个版本应增加文章时，将添加任务放入消息队列中。更新布隆过滤器的值
      * 
      * @version: v1.0.0
      * @author: yangli
@@ -68,10 +72,9 @@ public class ArticleBloomFilter implements BloomFilterInterface<Integer>{
     			criteria.put("status", ArticleStatus.PUBLISH.getValue());
     			// 文章列表
     			PageInfo<Article> articleList = articleService.pageArticle(pageIndex, ArticleConstant.ARTICLE_BOOLMFILTER_TO_PAGE_SIZE, criteria);
+    			List<Article> articles = articleList.getList();
     	    	//初始化布隆过滤器
-    	    	for (Article article : articleList.getList()) {
-    	    		bloomFilter.put(article.getArticleId());
-				}
+    			articles.forEach(article->bloomFilter.put(article.getArticleId()));
     		});
     		//当前页数加1
     		i++;
