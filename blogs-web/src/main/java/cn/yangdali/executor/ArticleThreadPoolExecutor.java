@@ -61,16 +61,20 @@ public class ArticleThreadPoolExecutor {
 	 */
 	private static final ThreadFactory THREAD_FACTORY = new ArticleThreadFactory();
 	/**
-	 * 初始化线程池
+	 * 初始化文章线程池
+	 * 本次更新：携带线程池创建工厂（线程名称进行略微修改）
 	 * 
-	 * @version: v1.0.0
+	 * 历史版本：
+	 * v1.0.0 无线程创建工厂的初始化线程池
+	 * 
+	 * @version: v1.1.0
 	 * @author: yangli
-	 * @date: 2019年8月19日 下午5:47:28
+	 * @date: 2019年10月24日 上午9:57:30 
 	 *
 	 */
 	@PostConstruct
 	private void initThreadPoolExecutor() {
-		executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, UNIT, WORK_QUEUE, THREAD_FACTORY, DEFAULT_HANDLER)
+		executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, UNIT, WORK_QUEUE, THREAD_FACTORY, DEFAULT_HANDLER);
 	}
 	public ThreadPoolExecutor getExecutor() {
 		return executor;

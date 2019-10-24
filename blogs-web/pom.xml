@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>cn.yangdali</groupId>
 		<artifactId>blogs-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>blogs-web</artifactId>
 	<packaging>war</packaging>
