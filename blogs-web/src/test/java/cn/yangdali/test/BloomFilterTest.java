@@ -3,6 +3,11 @@ package cn.yangdali.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
+
 import com.google.common.base.Charsets;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
@@ -42,5 +47,13 @@ public class BloomFilterTest {
 		}
 		System.out.println(bloomFilter.mightContain("a"));
 		System.out.println(bloomFilter.mightContain("b"));
+		DefaultSingletonBeanRegistry beanRegistry = new DefaultSingletonBeanRegistry();
+		new BeanFactoryPostProcessor() {
+
+			@Override
+			public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+				beanFactory.getBean("");
+			}
+		};
 	}
 }

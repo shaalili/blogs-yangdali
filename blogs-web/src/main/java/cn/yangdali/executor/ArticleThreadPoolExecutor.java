@@ -3,12 +3,15 @@ package cn.yangdali.executor;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Repository;
+
+import cn.yangdali.executor.factory.ArticleThreadFactory;
 
 /**
  * 文章类线程池
@@ -54,6 +57,10 @@ public class ArticleThreadPoolExecutor {
 	 */
 	private static final RejectedExecutionHandler DEFAULT_HANDLER = new ThreadPoolExecutor.AbortPolicy();
 	/**
+	 * 文章线程池线程创建工厂
+	 */
+	private static final ThreadFactory THREAD_FACTORY = new ArticleThreadFactory();
+	/**
 	 * 初始化线程池
 	 * 
 	 * @version: v1.0.0
@@ -63,7 +70,7 @@ public class ArticleThreadPoolExecutor {
 	 */
 	@PostConstruct
 	private void initThreadPoolExecutor() {
-		executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, UNIT, WORK_QUEUE, DEFAULT_HANDLER);
+		executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_TIME, UNIT, WORK_QUEUE, THREAD_FACTORY, DEFAULT_HANDLER)
 	}
 	public ThreadPoolExecutor getExecutor() {
 		return executor;

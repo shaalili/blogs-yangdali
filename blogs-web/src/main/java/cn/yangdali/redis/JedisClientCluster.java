@@ -19,7 +19,7 @@ import redis.clients.jedis.JedisCluster;
  */
 @Repository("jedisClientCluster")
 public class JedisClientCluster implements JedisClient {
-	
+
 //	private static final Logger logger = LoggerFactory.getLogger(JedisClientCluster.class);
 
 	@Autowired
@@ -29,7 +29,7 @@ public class JedisClientCluster implements JedisClient {
 	public String set(String key, String value, int time) {
 		return jedisCluster.setex(key, time, value);
 	}
-	
+
 	@Override
 	public String set(String key, String value) {
 		return jedisCluster.set(key, value);
@@ -77,12 +77,12 @@ public class JedisClientCluster implements JedisClient {
 
 	@Override
 	public <T> List<T> getList(String key, Class<T> requiredType) {
-		List<String> redisValue = jedisCluster.lrange(key, 0, -1);
-		List<T> resultValue = new ArrayList<>();
-		for (String string : redisValue) {
+		var redisValue = jedisCluster.lrange(key, 0, -1);
+		List<T> resultValue = new ArrayList<>(redisValue.size());
+		redisValue.forEach((string) -> {
 			T parseObject = JSON.parseObject(string, requiredType);
 			resultValue.add(parseObject);
-		}
+		});
 		return resultValue;
 	}
 
@@ -105,12 +105,12 @@ public class JedisClientCluster implements JedisClient {
 
 	@Override
 	public <T> void setList(String key, List<T> redisValue) {
-		//jedisCluster.lpush(key, redisValue);方法的第二个参数为可变参数，但是我还没找到如何将list集合转换为可变参数的方法
-		//如果后期变动，应将集合直接传入第二个参数，这样就可以不使用循环
-		//此处使用循环不知是否会有隐患
-		for (T t : redisValue) {
+		// jedisCluster.lpush(key, redisValue);方法的第二个参数为可变参数，但是我还没找到如何将list集合转换为可变参数的方法
+		// 如果后期变动，应将集合直接传入第二个参数，这样就可以不使用循环
+		// 此处使用循环不知是否会有隐患
+		redisValue.forEach((t) -> {
 			String jsonString = JSON.toJSONString(t);
 			setList(key, jsonString);
-		}
+		});
 	}
 }

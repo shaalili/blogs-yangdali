@@ -26,12 +26,11 @@ public class ArticleBloomComsumerListener implements MessageListenerConcurrently
 	private BloomFilterInterface<Integer> articleBloomFilter;
 	@Override
 	public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> messageExts, ConsumeConcurrentlyContext concurrentlyContext) {
-		String articleID = "";
 		//从消息队列中获取文章id
-		for (MessageExt messageExt : messageExts) {
-			articleID = new String(messageExt.getBody());
+		messageExts.forEach((messageExt)->{
+			var articleID = new String(messageExt.getBody());
 			articleBloomFilter.put(Integer.valueOf(articleID));
-		}
+		});
 		return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 	}
 }

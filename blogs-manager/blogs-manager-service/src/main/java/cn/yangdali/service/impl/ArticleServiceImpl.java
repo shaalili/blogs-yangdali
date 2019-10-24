@@ -1,10 +1,10 @@
 package cn.yangdali.service.impl;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.common.message.Message;
@@ -121,27 +121,24 @@ public class ArticleServiceImpl implements ArticleService {
 		article.setArticleUpdateTime(new Date());
 		articleMapper.update(article);
 
-		if (article.getTagList() != null) {
+		Optional.ofNullable(article).map((articleParam) -> articleParam.getTagList()).ifPresent((tags) -> {
 			// 删除标签和文章关联
 			articleTagRefMapper.deleteByArticleId(article.getArticleId());
 			// 添加标签和文章关联
-			for (int i = 0; i < article.getTagList().size(); i++) {
-				ArticleTagRef articleTagRef = new ArticleTagRef(article.getArticleId(),
-						article.getTagList().get(i).getTagId());
+			tags.forEach((tag) -> {
+				ArticleTagRef articleTagRef = new ArticleTagRef(article.getArticleId(), tag.getTagId());
 				articleTagRefMapper.insert(articleTagRef);
-			}
-		}
-
-		if (article.getCategoryList() != null) {
+			});
+		});
+		Optional.of(article).map((articleParam) -> articleParam.getCategoryList()).ifPresent((categorys) -> {
 			// 添加分类和文章关联
 			articleCategoryRefMapper.deleteByArticleId(article.getArticleId());
 			// 删除分类和文章关联
-			for (int i = 0; i < article.getCategoryList().size(); i++) {
-				ArticleCategoryRef articleCategoryRef = new ArticleCategoryRef(article.getArticleId(),
-						article.getCategoryList().get(i).getCategoryId());
+			categorys.forEach((categoty) -> {
+				ArticleCategoryRef articleCategoryRef = new ArticleCategoryRef(article.getArticleId(), categoty.getCategoryId());
 				articleCategoryRefMapper.insert(articleCategoryRef);
-			}
-		}
+			});
+		});
 	}
 
 	@Override
@@ -165,8 +162,7 @@ public class ArticleServiceImpl implements ArticleService {
 		List<Article> articleList = articleMapper.findAll(criteria);
 		for (int i = 0; i < articleList.size(); i++) {
 			// 封装CategoryList
-			List<Category> categoryList = articleCategoryRefMapper
-					.listCategoryByArticleId(articleList.get(i).getArticleId());
+			List<Category> categoryList = articleCategoryRefMapper.listCategoryByArticleId(articleList.get(i).getArticleId());
 			if (categoryList == null || categoryList.size() == 0) {
 				categoryList = new ArrayList<>();
 				categoryList.add(Category.Default());

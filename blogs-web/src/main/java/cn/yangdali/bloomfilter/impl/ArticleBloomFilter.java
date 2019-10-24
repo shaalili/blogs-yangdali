@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.github.pagehelper.PageInfo;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
@@ -71,10 +70,10 @@ public class ArticleBloomFilter implements BloomFilterInterface<Integer>{
     	    	HashMap<String, Object> criteria = new HashMap<>(1);
     			criteria.put("status", ArticleStatus.PUBLISH.getValue());
     			// 文章列表
-    			PageInfo<Article> articleList = articleService.pageArticle(pageIndex, ArticleConstant.ARTICLE_BOOLMFILTER_TO_PAGE_SIZE, criteria);
+    			var articleList = articleService.pageArticle(pageIndex, ArticleConstant.ARTICLE_BOOLMFILTER_TO_PAGE_SIZE, criteria);
     			List<Article> articles = articleList.getList();
     	    	//初始化布隆过滤器
-    			articles.forEach(article->bloomFilter.put(article.getArticleId()));
+    			articles.stream().forEach(article->bloomFilter.put(article.getArticleId()));
     		});
     		//当前页数加1
     		i++;

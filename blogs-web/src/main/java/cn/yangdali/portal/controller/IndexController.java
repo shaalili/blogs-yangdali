@@ -33,7 +33,7 @@ import cn.yangdali.service.TagService;
 /**
  * 主页相关信息查询
  *
- * @author：yangli	
+ * @author：yangli
  * @date:2019年9月4日 下午8:21:50
  * @version 1.0
  */
@@ -57,7 +57,7 @@ public class IndexController {
 
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private JedisClient jedisClient;
 
@@ -79,19 +79,19 @@ public class IndexController {
 
 		// 侧边栏显示
 		// 标签列表显示
-		//此处修改为标签存放入缓存中，不直接到数据库中查询，redis中存放标签的list
-		//如果有更新，则同时更新redis中的标签
+		// 此处修改为标签存放入缓存中，不直接到数据库中查询，redis中存放标签的list
+		// 如果有更新，则同时更新redis中的标签
 		List<Tag> allTagList = jedisClient.getList(RedisConstant.TAG_TO_REDIS_THE_KEY, Tag.class);
-		//如果缓存查询为空，则从数据库中查询
+		// 如果缓存查询为空，则从数据库中查询
 		if (CollectionUtils.isEmpty(allTagList)) {
-			//如何防止穿透和雪崩?
+			// 如何防止穿透和雪崩?
 			allTagList = tagService.listTag();
 			if (CollectionUtils.isEmpty(allTagList)) {
-				//此处将查询信息放入缓存中。如果为空，则将空信息刷入缓存，并且设置过期时间
+				// 此处将查询信息放入缓存中。如果为空，则将空信息刷入缓存，并且设置过期时间
 				jedisClient.setList(RedisConstant.TAG_TO_REDIS_THE_KEY, allTagList);
 				jedisClient.expire(RedisConstant.TAG_TO_REDIS_THE_KEY, 500);
 			} else {
-				//将结果放入缓存中
+				// 将结果放入缓存中
 				jedisClient.setList(RedisConstant.TAG_TO_REDIS_THE_KEY, allTagList);
 			}
 		}
@@ -100,7 +100,7 @@ public class IndexController {
 		List<Comment> recentCommentList = commentService.listRecentComment(10);
 		// 查询文章，留言，文章总数等数量
 		List<String> siteBasicStatistics = new LinkedList<>();
-		//将查询数量统一放入redis中进行缓存
+		// 将查询数量统一放入redis中进行缓存
 		// 文章总数
 		Integer countArticle = articleService.countArticle();
 		siteBasicStatistics.add(countArticle.toString());

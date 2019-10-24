@@ -1,11 +1,12 @@
 package cn.yangdali.interceptor;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @version 1.0
  */
 public class LoginInterceptor implements HandlerInterceptor {
+	
 	/**
 	 * 在DispatcherServlet完全处理完请求后被调用
 	 */
@@ -43,11 +45,14 @@ public class LoginInterceptor implements HandlerInterceptor {
 		HttpSession httpSession = request.getSession();
 		//判断用户登录信息
 		Object attribute = httpSession.getAttribute("loginUser");
-		if (attribute == null) {
-			response.sendRedirect("/login");
+		return Optional.ofNullable(attribute).map((x)->true).orElseGet(()->{
+			try {
+				response.sendRedirect("");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return false;
-		}
-		return true;
+		});
 	}
 	
 }

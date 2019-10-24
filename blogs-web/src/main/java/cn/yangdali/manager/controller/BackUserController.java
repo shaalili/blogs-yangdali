@@ -18,6 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.yangdali.pojo.User;
 import cn.yangdali.service.UserService;
 
+/**
+ * 后台用户controller层
+ *
+ * @author：yangli	
+ * @date:2019年10月22日 上午11:24:45
+ * @version 1.0
+ */
 @Controller
 @RequestMapping("/admin/user")
 public class BackUserController {
@@ -63,7 +70,7 @@ public class BackUserController {
 	@RequestMapping(value = "/checkUserName", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> checkUserName(HttpServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>(4);
 		String username = request.getParameter("username");
 		User user = userService.getUserByName(username);
 		int id = Integer.valueOf(request.getParameter("id"));
@@ -89,7 +96,7 @@ public class BackUserController {
 	@RequestMapping(value = "/checkUserEmail", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> checkUserEmail(HttpServletRequest request) {
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>(4);
 		String email = request.getParameter("email");
 		User user = userService.getUserByEmail(email);
 		int id = Integer.valueOf(request.getParameter("id"));

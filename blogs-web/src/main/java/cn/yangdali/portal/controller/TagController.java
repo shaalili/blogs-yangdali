@@ -30,8 +30,7 @@ public class TagController {
 	/**
 	 * 根据标签查询文章
 	 *
-	 * @param tagId
-	 *            标签ID
+	 * @param tagId 标签ID
 	 * @return 模板
 	 */
 	@RequestMapping("/tag/{tagId}")
@@ -65,6 +64,5 @@ public class TagController {
 		model.addAttribute("pageUrlPrefix", "/tag?pageIndex");
 		return "Home/Page/articleListByTag";
 	}
-	
 
 }

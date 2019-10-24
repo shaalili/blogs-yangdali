@@ -16,7 +16,6 @@ import cn.yangdali.pojo.Link;
 import cn.yangdali.service.ArticleService;
 import cn.yangdali.service.LinkService;
 
-
 @Controller
 public class LinkController {
 	@Autowired
@@ -26,18 +25,17 @@ public class LinkController {
 	private ArticleService articleService;
 
 	@RequestMapping("/applyLink")
-	public String applyLinkView(Model model)  {
-		//侧边栏显示
-		//获得热评文章
+	public String applyLinkView(Model model) {
+		// 侧边栏显示
+		// 获得热评文章
 		List<Article> mostCommentArticleList = articleService.listArticleByCommentCount(8);
 		model.addAttribute("mostCommentArticleList", mostCommentArticleList);
 		return "Home/Page/applyLink";
 	}
 
-
-	@RequestMapping(value = "/applyLinkSubmit",method = {RequestMethod.POST})
+	@RequestMapping(value = "/applyLinkSubmit", method = { RequestMethod.POST })
 	@ResponseBody
-	public void applyLinkSubmit(Link link)  {
+	public void applyLinkSubmit(Link link) {
 		link.setLinkStatus(LinkStatus.HIDDEN.getValue());
 		link.setLinkCreateTime(new Date());
 		link.setLinkUpdateTime(new Date());

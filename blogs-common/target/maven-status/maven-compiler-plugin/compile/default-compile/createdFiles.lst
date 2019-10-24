@@ -1,6 +1,6 @@
 cn\yangdali\pojo\Tag.class
 cn\yangdali\pojo\User.class
+cn\yangdali\util\HtmlFilterTag.class
 cn\yangdali\pojo\Article.class
 cn\yangdali\pojo\Category.class
 cn\yangdali\util\Functions.class
-cn\yangdali\util\HtmlFilterTag.class

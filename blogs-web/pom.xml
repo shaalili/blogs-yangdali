@@ -84,7 +84,6 @@
 					<groupId>org.jboss.netty</groupId>
 				</exclusion>
 			</exclusions>
-
 		</dependency>
 		<!-- dubbo 2.6.6所需另外jar包 start -->
 		<dependency>
@@ -112,18 +111,10 @@
 			<groupId>com.101tec</groupId>
 			<artifactId>zkclient</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
 		<!-- 文件上传组件 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.rapid-framework</groupId>
-			<artifactId>rapid-core</artifactId>
 		</dependency>
 		<!-- 谷歌开发插件（项目中使用其中的布隆过滤器） -->
 		<dependency>
@@ -153,6 +144,17 @@
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
 		</dependency>
+		
+        <dependency>
+		  <groupId>commons-httpclient</groupId>
+		  <artifactId>commons-httpclient</artifactId>
+		  <version>3.1</version>
+		</dependency>
+		<!-- @PostConstruct的j2EE，java11中删除了这些jar包 -->
+		<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>javax.annotation-api</artifactId>
+			</dependency>
 	</dependencies>
 	<build>
 		<plugins>
